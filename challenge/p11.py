@@ -20,20 +20,20 @@ def main() :
    (x0,y0,x1,y1) = im.getbbox() ; 
    print x0,y0,x1,y1 ;
    im2 = im.copy();
-   pix2 = im2.load(); 
-   newIm = Image.new('RGB',(x1/2,y1/2));
-   newImPix = newIm.load();
-   for i in range(x0+1,x1+1,2) :
-      for j in range(y0,y1,2): 
-         newImPix[i/2,j/2] = pix[i,j];
-   newIm.show();
-   (x0,y0,x1,y1) = newIm.getbbox() ; 
-   print x0,y0,x1,y1 ;
-   for i in range(x0+1,x1+1,2) :
-      for j in range(y0,y1,2): 
-         newImPix[i,j] = (0,0,0);
-   newIm.show();
+   pix2 = im2.load();
 
+   # fn for subtracting tuples
+   subt = lambda x,y : (x[0]-y[0],x[1]-y[1],x[2]-y[2]) 
+   for i in range(x0,x1,2) :
+      for j in range(y0,y1,2): 
+         if j%2 == 0 : 
+            pix2[i+1,j] = subt(pix2[i+1,j],pix[i,j]);
+            #pdb.set_trace();
+         else : 
+            pix2[i,j] = subt(pix2[i,j],pix[i+1,j]);
+   im.show();
+   im2.show();
+   pdb.set_trace();
  
 if __name__ == '__main__' :
     main()

@@ -5,42 +5,35 @@ import urllib2 , bz2, re
 import pdb
 import Image, ImageDraw
 
-""" solution to problem 10 in pythonchallenge http://www.pythonchallenge.com/pc/return/bull.html
+""" solution to problem 11 in pythonchallenge http://www.pythonchallenge.com/pc/return/5808.html
 
-    The trick is to generate something known as Morris numbers
+    The Solution should be to demix two sets of pixels
 """
 
-def morris(last) :
-    if not last : return None
-    curr = last[0]
-    count = 0
-    sol = ''
-    for i in range(len(last)) : 
-        if last[i] == curr : 
-           count += 1
-        else :
-           sol += str(count)+str(curr) # add string to solution
-           curr = last[i]
-           count = 1
-    sol += str(count)+str(curr) # to flush the last string
-    return sol
-
-def genMorris(N) :
-     
-    for i in range(N) : 
-        if  i == 0 : 
-            last = '1'
-            yield '1' 
-        else : 
-             last = morris(last)
-             yield last
-
 def main() :
-    N = 31 # number of morris numbers needed
-    seq = [last for last in genMorris(N)] # using generators :)
-    print len(seq[30])
-    #print seq
-    #pdb.set_trace()
+   im = Image.open('cave.jpg') # Open image file   
+   # im.show();
+   im_save = im.copy();
+   data = im.getdata();
+   #print(type(data));
+   pix = im.load();
+   (x0,y0,x1,y1) = im.getbbox() ; 
+   print x0,y0,x1,y1 ;
+   im2 = im.copy();
+   pix2 = im2.load(); 
+   newIm = Image.new('RGB',(x1/2,y1/2));
+   newImPix = newIm.load();
+   for i in range(x0+1,x1+1,2) :
+      for j in range(y0,y1,2): 
+         newImPix[i/2,j/2] = pix[i,j];
+   newIm.show();
+   (x0,y0,x1,y1) = newIm.getbbox() ; 
+   print x0,y0,x1,y1 ;
+   for i in range(x0+1,x1+1,2) :
+      for j in range(y0,y1,2): 
+         newImPix[i,j] = (0,0,0);
+   newIm.show();
+
  
 if __name__ == '__main__' :
     main()
